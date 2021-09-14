@@ -23,6 +23,11 @@ public class Role implements GrantedAuthority {
     private Set<User> users;
 
     @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
     public String getAuthority() {
         return getName();
     }

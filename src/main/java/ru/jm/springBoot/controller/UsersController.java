@@ -28,8 +28,10 @@ public class UsersController {
     }
 
     @GetMapping("admin")
-    public String listUser(ModelMap modelMap) {
-        modelMap.addAttribute("list", userService.getAllUsers());
+    public String getAllUsers(ModelMap modelMap, @AuthenticationPrincipal User user) {
+        modelMap.addAttribute("listUser", userService.getAllUsers());
+        modelMap.addAttribute("listRoles", roleService.getAllRoles());
+        modelMap.addAttribute("user", user);
         return "adminPage";
     }
 
@@ -40,14 +42,14 @@ public class UsersController {
         return "userPage";
     }
 
-    @GetMapping(value = "user/new")
+    @GetMapping(value = "admin/new")
     public String newUser(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getAllRoles());
         return "createNew";
     }
 
-    @PostMapping(value = "user/new")
+    @PostMapping(value = "admin/new")
     public String newUser(@ModelAttribute User user,
                           @RequestParam(value = "roless") String[] role) throws NotFoundException {
         Set<Role> rolesSet = new HashSet<>();
@@ -59,14 +61,14 @@ public class UsersController {
         return "redirect:/admin";
     }
 
-    @GetMapping(value = "user/edit/{id}")
-    public String editUser(@PathVariable("id") long id, ModelMap model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "editUser";
-    }
+//    @GetMapping(value = "user/edit/{id}")
+//    public String editUser(@PathVariable("id") long id, ModelMap model) {
+//        model.addAttribute("user", userService.getById(id));
+//        model.addAttribute("roles", roleService.getAllRoles());
+//        return "editUser";
+//    }
 
-    @PostMapping(value = "user/edit/{id}")
+    @PostMapping(value = "admin/{id}")
     public String editUser(@ModelAttribute User user, @RequestParam(value = "roless") String [] role) throws NotFoundException {
         Set<Role> rolesSet = new HashSet<>();
         for (String roles : role) {
@@ -77,10 +79,15 @@ public class UsersController {
         return "redirect:/admin";
     }
 
-    @GetMapping(value = "user/delete/{id}")
+    @PostMapping(value = "admin/{id}/del")
     public String deleteUser(@PathVariable("id") long id) {
         User user = userService.getById(id);
         userService.delete(user);
         return "redirect:/admin";
+    }
+
+    @GetMapping("login")
+    public String login() {
+        return "login";
     }
 }

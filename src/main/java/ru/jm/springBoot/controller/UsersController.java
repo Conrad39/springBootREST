@@ -13,6 +13,7 @@ import ru.jm.springBoot.model.User;
 import ru.jm.springBoot.service.RoleService;
 import ru.jm.springBoot.service.UserService;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,11 +28,22 @@ public class UsersController {
         this.roleService = roleService;
     }
 
+    @GetMapping("/")
+    public String index(Principal principal, ModelMap modelMap) {
+        modelMap.addAttribute("username", principal.getName());
+        return "1index";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
     @GetMapping("admin")
     public String getAllUsers(ModelMap modelMap, @AuthenticationPrincipal User user) {
         modelMap.addAttribute("listUser", userService.getAllUsers());
         modelMap.addAttribute("listRoles", roleService.getAllRoles());
-        modelMap.addAttribute("user", user);
+        modelMap.addAttribute("user",user);
         return "adminPage";
     }
 
@@ -46,12 +58,12 @@ public class UsersController {
     public String newUser(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getAllRoles());
-        return "createNew";
+        return "1createNew";
     }
 
     @PostMapping(value = "admin/new")
     public String newUser(@ModelAttribute User user,
-                          @RequestParam(value = "roless") String[] role) throws NotFoundException {
+                          @RequestParam(value = "rolez") String[] role) throws NotFoundException {
         Set<Role> rolesSet = new HashSet<>();
         for (String roles : role) {
             rolesSet.add(roleService.getByName(roles));
@@ -61,15 +73,15 @@ public class UsersController {
         return "redirect:/admin";
     }
 
-//    @GetMapping(value = "user/edit/{id}")
-//    public String editUser(@PathVariable("id") long id, ModelMap model) {
-//        model.addAttribute("user", userService.getById(id));
-//        model.addAttribute("roles", roleService.getAllRoles());
-//        return "editUser";
-//    }
+    @GetMapping(value = "admin/edit/{id}")
+    public String editUser(@PathVariable("id") long id, ModelMap model) {
+        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("roles", roleService.getAllRoles());
+        return "1editUser";
+    }
 
-    @PostMapping(value = "admin/{id}")
-    public String editUser(@ModelAttribute User user, @RequestParam(value = "roless") String [] role) throws NotFoundException {
+    @PostMapping(value = "admin/edit/{id}")
+    public String editUser(@ModelAttribute User user, @RequestParam(value = "rolez") String [] role) throws NotFoundException {
         Set<Role> rolesSet = new HashSet<>();
         for (String roles : role) {
             rolesSet.add((roleService.getByName(roles)));
@@ -79,15 +91,12 @@ public class UsersController {
         return "redirect:/admin";
     }
 
-    @PostMapping(value = "admin/{id}/del")
+    @PostMapping(value = "admin/delete/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         User user = userService.getById(id);
         userService.delete(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("login")
-    public String login() {
-        return "login";
-    }
+
 }

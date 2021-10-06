@@ -132,7 +132,7 @@
 
                                 <div class="modal-body text-center">
 
-                                  <form th:action="@{/admin/{id}(id=${user.id})}"
+                                  <form th:action="@{/admin/edit/{id}(id=${user.id})}"
                                         th:object="${user}" method="post"
                                         th:id="${'editForm' + user.id}">
 
@@ -172,7 +172,7 @@
                                              for="editUsername">LOGIN</label>
                                       <input type="text"
                                              class="form-control"
-                                             name="age"
+                                             name="username"
                                              th:value="${user.username}"
                                              id="editUsername"
                                              required>
@@ -203,7 +203,7 @@
                                       <select multiple size="2"
                                               class="form-control"
                                               id="editRoles"
-                                              name="roless"
+                                              name="rolez"
                                               required>
                                         <option
                                                 th:each="role : ${listRoles}"
@@ -248,7 +248,7 @@
 
                                 <div class="modal-body text-center">
 
-                                  <form th:action="@{/admin/{id}/del(id=${user.id})}"
+                                  <form th:action="@{/admin/delete/{id}(id=${user.id})}"
                                         th:object="${user}" method="post"
                                         th:id="${'delForm' + user.id}">
 
@@ -268,7 +268,7 @@
                                              for="delName">First name</label>
                                       <input type="text"
                                              class="form-control"
-                                             name="username"
+                                             name="firstName"
                                              th:value="${user.firstName}"
                                              id="delName"
                                              disabled>
@@ -278,7 +278,7 @@
                                              for="delName2">Last name</label>
                                       <input type="text"
                                              class="form-control"
-                                             name="lastname"
+                                             name="lastName"
                                              th:value="${user.lastName}"
                                              id="delName2"
                                              disabled>
@@ -309,7 +309,7 @@
                                       <select multiple size="2"
                                               class="form-control"
                                               id="delRoles"
-                                              name="roless"
+                                              name="rolez"
                                               disabled>
                                         <option
                                                 th:each="role : ${user.roles}"
@@ -399,7 +399,7 @@
                             <select multiple size="2"
                                     class="form-control"
                                     id="roles"
-                                    name="roless"
+                                    name="rolez"
                                     required>
                               <option
                                       th:each="role : ${listRoles}"

@@ -1,6 +1,5 @@
 package ru.jm.springBoot.service;
 
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.jm.springBoot.dao.RoleRepository;
@@ -47,11 +46,9 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public Role getByName(String name) throws NotFoundException {
+    public Role getByName(String name) {
         Role role = roleRepository.findByName(name);
-        if (role == null){
-            throw new NotFoundException(name);
-        }
+
         return role;
     }
 }

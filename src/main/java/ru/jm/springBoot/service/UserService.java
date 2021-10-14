@@ -3,7 +3,6 @@ package ru.jm.springBoot.service;
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 import javassist.NotFoundException;
-import ru.jm.springBoot.dao.UserRepository;
 import ru.jm.springBoot.model.User;
 
 import java.util.List;

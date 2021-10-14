@@ -3,42 +3,49 @@ package ru.jm.springBoot.model;
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 
-import lombok.*;
+import lombok.Data;
+import lombok.NonNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.jm.springBoot.dto.UserDTO;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter @Setter
-@Data
+
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NonNull
-    @Column(name = "firstName")
+    @Column(name = "firstName" )
     private String firstName;
+
     @NonNull
     @Column(name = "lastName")
     private String lastName;
+
     @NonNull
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username")
     private String username;
+
     @NonNull
     @Column(name = "password")
     private String password;
+
     @NonNull
     @Column(name = "email")
     private String email;
+
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     @JoinTable(
@@ -48,15 +55,25 @@ public class User implements UserDetails {
             )
     private Set<Role> roles = new HashSet<>();
 
+    public User(UserDTO userDTO) {
+        this.id = userDTO.getId();
+        this.firstName = userDTO.getFirstName();
+        this.lastName = userDTO.getLastName();
+        this.email = userDTO.getEmail();
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+    }
+
+    public User() {
+
+    }
+
     @Override
     public String getUsername() {
         return username;
     }
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -80,7 +97,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return roles;
     }
 
 }
